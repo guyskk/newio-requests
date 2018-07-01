@@ -27,8 +27,8 @@ setup(
     ],
     extras_require={
         'dev': [
-            'newio_kernel>=0.4.2'
-            'pre-commit==1.4.4',
+            'newio_kernel>=0.4.2',
+            'pre-commit==1.10.2',
             'tox==2.9.1',
             'flake8==3.5.0',
             'pytest==3.3.2',
