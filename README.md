@@ -1,4 +1,4 @@
-# Curio + Requests: Async HTTP for Humans
+# Newio + Requests: Async HTTP for Humans
 
 [![PyPI](https://img.shields.io/pypi/pyversions/curequests.svg)](https://pypi.python.org/pypi/curequests)
 [![travis-ci](https://api.travis-ci.org/guyskk/curequests.svg?branch=master)](https://travis-ci.org/guyskk/curequests) [![codecov](https://codecov.io/gh/guyskk/curequests/branch/master/graph/badge.svg)](https://codecov.io/gh/guyskk/curequests)
@@ -7,8 +7,8 @@
 ## Overview
 
 ```python
-from curio import run
-from curequests import get, post
+from newio_kernel import run
+from newio_requests import get, post
 
 async def main():
     r = await get('https://httpbin.org/get')
@@ -24,7 +24,7 @@ run(main)
 Python 3.6+ is required.
 
 ```bash
-pip install curequests
+pip install newio-requests
 ```
 
 ## Features

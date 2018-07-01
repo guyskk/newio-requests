@@ -1,10 +1,10 @@
 import os.path
-from setuptools import setup
+from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
 about = {}
-with open(os.path.join(here, 'curequests', '__about__.py')) as f:
+with open(os.path.join(here, 'src/newio_requests', '__about__.py')) as f:
     exec(f.read(), about)
 
 setup(
@@ -16,14 +16,30 @@ setup(
     author_email=about['__author_email__'],
     url=about['__url__'],
     license=about['__license__'],
-    packages=['curequests'],
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
     install_requires=[
         'httptools',
         'yarl',
-        'curio',
+        'newio>=0.4.2',
         'requests',
         'namedlist',
     ],
+    extras_require={
+        'dev': [
+            'newio_kernel>=0.4.2',
+            'pre-commit==1.10.2',
+            'tox==2.9.1',
+            'flake8==3.5.0',
+            'pytest==3.3.2',
+            'pytest-cov==2.5.1',
+            'codecov==2.0.13',
+            'pytest-httpbin==0.3.0',
+            'invoke==0.22.0',
+            'twine==1.9.1',
+            'wheel==0.30.0',
+        ],
+    },
     zip_safe=False,
     classifiers=[
         'Intended Audience :: Developers',

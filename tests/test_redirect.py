@@ -1,10 +1,11 @@
 import pytest
-from curequests import session
+from newio_requests import session
 from requests.exceptions import TooManyRedirects
-from utils import run_with_curio
+
+from .utils import run_with_newio
 
 
-@run_with_curio
+@run_with_newio
 async def test_redirect(httpbin_both):
     s = session()
     s.max_redirects = 3
