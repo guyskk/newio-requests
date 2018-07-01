@@ -1,10 +1,10 @@
-from curequests.resource_pool import ResourcePool
-from curequests.future import Future
+from newio_requests.resource_pool import ResourcePool
+from newio_requests.future import Future
 
-from .utils import run_with_curio
+from .utils import run_with_newio
 
 
-@run_with_curio
+@run_with_newio
 async def test_resource_pool_idle():
     pool = ResourcePool(Future, max_items_total=1)
     # get resource A
@@ -28,7 +28,7 @@ async def test_resource_pool_idle():
     assert pool.num_idle == 0
 
 
-@run_with_curio
+@run_with_newio
 async def test_resource_pool_wait_and_notify_same_key():
     pool = ResourcePool(Future, max_items_total=1)
     # open a resource
@@ -58,7 +58,7 @@ async def test_resource_pool_wait_and_notify_same_key():
     assert pool.num_idle == 0
 
 
-@run_with_curio
+@run_with_newio
 async def test_resource_pool_wait_and_notify_diff_key():
     pool = ResourcePool(Future, max_items_per_key=2, max_items_total=2)
     # open two resource
@@ -102,7 +102,7 @@ async def test_resource_pool_wait_and_notify_diff_key():
     assert pool.size('B') == 0
 
 
-@run_with_curio
+@run_with_newio
 async def test_put_when_pool_closed():
     pool = ResourcePool(Future)
     ga = pool.get('A')
@@ -111,7 +111,7 @@ async def test_put_when_pool_closed():
     assert ret.need_close
 
 
-@run_with_curio
+@run_with_newio
 async def test_close():
     pool = ResourcePool(Future, max_items_per_key=2, max_items_total=3)
     # make an idle resource

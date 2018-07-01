@@ -4,9 +4,12 @@ python:
   - "3.6"
   - "nightly"
 
+matrix:
+  allow_failures:
+    - python: "nightly"
+
 install:
-    - pip install -I -r requirements.txt
-    - pip freeze
+    - ./bootstrap.sh
 
 script:
     - inv lint

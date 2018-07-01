@@ -14,20 +14,20 @@ def lint(ctx):
 
 @task
 def test(ctx, cov=False, verbose=False):
-    cov = ' --cov=curequests --cov-report=term-missing' if cov else ''
-    verbose = ' -v -x --log-level=debug' if verbose else ''
+    cov = ' --cov=newio_requests --cov-report=term-missing' if cov else ''
+    verbose = ' -s -x --log-cli-level=debug' if verbose else ''
     cmd = (f'REQUESTS_CA_BUNDLE=`python -m pytest_httpbin.certs` '
            f'pytest --tb=short{cov}{verbose} tests')
     ctx.run(cmd)
 
 
 @task
-def dist(ctx, upload=False):
-    cmds = [
-        'rm -f dist/*',
-        'python setup.py bdist_wheel',
-    ]
-    if upload:
-        cmds.append('twine upload dist/*')
-    for cmd in cmds:
-        ctx.run(cmd, echo=True)
+def build(ctx):
+    ctx.run('rm -f dist/*')
+    ctx.run('python setup.py bdist_wheel')
+
+
+@task
+def publish(ctx):
+    build(ctx)
+    ctx.run(('twine upload dist/*'))

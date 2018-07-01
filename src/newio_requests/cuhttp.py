@@ -1,7 +1,7 @@
 import zlib
 from collections import namedtuple
 import httptools
-from newio import timeout, TaskTimeout
+from newio import timeout_after
 from requests.structures import CaseInsensitiveDict
 from requests import ReadTimeout as ReadTimeoutError
 from urllib3.response import GzipDecoder as GzipDecoderBase
@@ -117,13 +117,13 @@ class ResponseParser:
 
     async def recv(self):
         if not self.timeout or self.timeout <= 0:
-            return await self._sock.recv(self.current_buffer_size)
+            data = await self._sock.recv(self.current_buffer_size)
         else:
-            try:
-                async with timeout(self.timeout):
-                    return await self._sock.recv(self.current_buffer_size)
-            except TaskTimeout as ex:
-                raise ReadTimeoutError(str(ex)) from None
+            async with timeout_after(self.timeout) as is_timeout:
+                data = await self._sock.recv(self.current_buffer_size)
+            if is_timeout:
+                raise ReadTimeoutError()
+        return data
 
     def _set_current_buffer_size(self, buffer_size):
         self.current_buffer_size = buffer_size

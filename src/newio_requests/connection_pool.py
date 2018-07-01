@@ -75,12 +75,10 @@ class Connection:
         """check if socket in close-wait state"""
         # the socket is non-blocking mode, read 1 bytes will return EOF
         # which means peer closed, or raise exception means alive
-        with self.sock.blocking() as sock:
-            sock.setblocking(False)
-            try:
-                r = sock.recv(1)
-            except (BlockingIOError, SSLWantReadError, SSLWantWriteError):
-                return False
+        try:
+            r = self.sock.socket.recv(1)
+        except (BlockingIOError, SSLWantReadError, SSLWantWriteError):
+            return False
         assert r == b'', "is_peer_closed shouldn't be called at this time!"
         return True
 
