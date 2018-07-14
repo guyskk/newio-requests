@@ -38,6 +38,7 @@ setup(
             'invoke==0.22.0',
             'twine==1.9.1',
             'wheel==0.30.0',
+            'bumpversion==0.5.3',
         ],
     },
     zip_safe=False,
