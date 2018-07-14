@@ -9,7 +9,7 @@ This module implements the Requests API.
 :license: Apache2, see LICENSE for more details.
 """
 
-from . import sessions
+from .sessions import Session
 
 
 async def request(method, url, **kwargs):
@@ -53,8 +53,8 @@ async def request(method, url, **kwargs):
     # By using the 'with' statement we are sure the session is closed, thus we
     # avoid leaving sockets open which can trigger a ResourceWarning in some
     # cases, and look like a memory leak in others.
-    async with sessions.CuSession() as session:
-        return await session.request(method=method, url=url, **kwargs)
+    async with Session() as s:
+        return await s.request(method=method, url=url, **kwargs)
 
 
 def get(url, params=None, **kwargs):

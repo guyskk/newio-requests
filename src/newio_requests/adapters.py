@@ -8,9 +8,9 @@ from requests.adapters import (
     CaseInsensitiveDict, get_encoding_from_headers, extract_cookies_to_jar)
 from requests.exceptions import ConnectionError
 
-from .models import CuResponse, MultipartBody, StreamBody
+from .models import Response, MultipartBody, StreamBody
 from .utils import select_proxy, normalize_timeout
-from .cuhttp import ResponseParser, RequestSerializer
+from .http import ResponseParser, RequestSerializer
 from .connection_pool import ConnectionPool
 
 DEFAULT_CONNS_PER_NETLOC = 10
@@ -20,7 +20,7 @@ CONTENT_CHUNK_SIZE = 16 * 1024
 logger = logging.getLogger(__name__)
 
 
-class CuHTTPAdapter(BaseAdapter):
+class HTTPAdapter(BaseAdapter):
     """The built-in HTTP Adapter for urllib3.
 
     Provides a general-case interface for Requests sessions to contact HTTP and
@@ -43,7 +43,7 @@ class CuHTTPAdapter(BaseAdapter):
 
       >>> import requests
       >>> s = requests.Session()
-      >>> a = requests.adapters.HTTPAdapter(max_retries=3)
+      >>> a = requests.adapters(max_retries=3)
       >>> s.mount('http://', a)
     """
 
@@ -180,13 +180,13 @@ class CuHTTPAdapter(BaseAdapter):
         """Builds a :class:`Response <requests.Response>` object from a urllib3
         response. This should not be called from user code, and is only exposed
         for use when subclassing the
-        :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`
+        :class: <requests.adapters>`
 
         :param req: The :class:`PreparedRequest <PreparedRequest>` used to generate the response.
         :param resp: The urllib3 response object.
         :rtype: requests.Response
         """
-        response = CuResponse()
+        response = Response()
 
         # Fallback to None if there's no status_code, for whatever reason.
         response.status_code = getattr(resp, 'status', None)

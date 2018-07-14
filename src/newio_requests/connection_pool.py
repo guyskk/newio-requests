@@ -16,7 +16,7 @@ from requests.exceptions import ProxyError
 from newio.ssl import SSLWantReadError, SSLWantWriteError
 from .resource_pool import ResourcePool, ResourcePoolClosedError
 from .future import Future
-from .cuhttp import RequestSerializer, ResponseParser
+from .http import RequestSerializer, ResponseParser
 from .network import open_connection, ssl_wrap_socket
 
 logger = logging.getLogger(__name__)
