@@ -155,8 +155,8 @@ class HTTPAdapter(BaseAdapter):
                     await sock.sendall(bytes_to_send)
                 raw = await ResponseParser(sock, timeout=timeout.read).parse()
             except socket.error as err:
-                raise ConnectionError(err, request=request)
-        except:
+                raise ConnectionError(err, request=request) from err
+        except BaseException:
             await conn.close()
             raise
 

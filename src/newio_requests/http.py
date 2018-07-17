@@ -116,13 +116,7 @@ class ResponseParser:
     # ========= end httptools callbacks ========
 
     async def recv(self):
-        if not self.timeout or self.timeout <= 0:
-            data = await self._sock.recv(self.current_buffer_size)
-        else:
-            async with timeout_after(self.timeout) as is_timeout:
-                data = await self._sock.recv(self.current_buffer_size)
-            if is_timeout:
-                raise ReadTimeoutError()
+        data = await self._sock.recv(self.current_buffer_size)
         return data
 
     def _set_current_buffer_size(self, buffer_size):
@@ -136,12 +130,24 @@ class ResponseParser:
             return DeflateDecoder()
         return None
 
-    async def parse(self):
+    def _has_timeout(self):
+        return self.timeout and self.timeout > 0
+
+    async def _read_header(self):
         while not self.headers_completed:
             data = await self.recv()
             self._parser.feed_data(data)
             if not data:
                 break
+
+    async def parse(self):
+        if not self._has_timeout():
+            await self._read_header()
+        else:
+            async with timeout_after(self.timeout) as is_timeout:
+                await self._read_header()
+            if is_timeout:
+                raise ReadTimeoutError()
         if not self.headers_completed:
             raise ProtocolError('incomplete response headers')
         body_stream = self.body_stream()
@@ -164,6 +170,17 @@ class ResponseParser:
         return Response(**environ)
 
     async def body_stream(self):
+        if not self._has_timeout():
+            async for chunk in self._body_stream_impl():
+                yield chunk
+        else:
+            async with timeout_after(self.timeout) as is_timeout:
+                async for chunk in self._body_stream_impl():
+                    yield chunk
+            if is_timeout:
+                raise ReadTimeoutError()
+
+    async def _body_stream_impl(self):
         while self.body_chunks:
             yield self.body_chunks.pop(0)
         while not self.completed:
