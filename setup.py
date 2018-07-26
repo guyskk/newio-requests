@@ -21,13 +21,12 @@ setup(
     install_requires=[
         'httptools',
         'yarl',
-        'newio>=0.4.2',
+        'newio>=0.6.1',
         'requests',
         'namedlist',
     ],
     extras_require={
         'dev': [
-            'newio_kernel>=0.4.2',
             'pre-commit==1.10.2',
             'tox==2.9.1',
             'flake8==3.5.0',

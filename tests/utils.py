@@ -1,9 +1,13 @@
 import functools
-from newio_kernel import run
+from newio import Runner
+
+
+run = Runner(debug=True)
 
 
 def run_with_newio(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        run(f(*args, **kwargs), timeout=10)
+        run(f, *args, **kwargs)
+
     return wrapper
